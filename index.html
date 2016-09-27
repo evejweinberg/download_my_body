@@ -18,11 +18,12 @@
     <!-- my scripts -->
     <script src="js/script2.js"></script>
     <!-- <script src="js/fontloader.js"></script> -->
-
-    <div id="about" onclick="openAbout()">
-        ABOUT
+    <div id='type-container'>
+        <div id="about" class='type' onclick="openAbout()">
+            ABOUT
+        </div>
+        <button id='download' class='type'>DOWNLOAD</button>
     </div>
-
     <script type="text/javascript">
         function openAbout() {
             document.getElementById('about').append('<div id="about-info"></div>')

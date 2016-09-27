@@ -105,7 +105,7 @@ var lesson11 = {
     // Prepare ColladaLoader
     var daeLoader = new THREE.ColladaLoader();
     daeLoader.options.convertUpAxis = true;
-    daeLoader.load('models/idle.dae', function(collada) {
+    daeLoader.load('models/swing_dancing.dae', function(collada) {
 
       var modelMesh = collada.scene;
 
@@ -118,7 +118,7 @@ var lesson11 = {
       } );
 
       // Set position and scale
-      var scale = 0.3;
+      var scale = 0.013;
       modelMesh.position.set(0, -20, 0);
       modelMesh.scale.set(scale, scale, scale);
 
