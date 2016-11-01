@@ -27,100 +27,107 @@ var typeRotatio = .01
 var spinning = false;
 var group;
 
-////////////////////////////
-var loaderB = new THREE.JSONLoader();
+//Init the scene so we can push shit to it?
+window.onload = function(){
+  init();
+};
 
-// load a resource
-loaderB.load(
-	// resource URL
-	'models/joe.json',
-	// Function when resource is loaded
-	function ( geometry, materials ) {
-		var material = new THREE.MultiMaterial( materials );
-		dae_joe = new THREE.Mesh( geometry, material );
-    init();
-    scene.add( dae_joe );
-    animate();
-    // dae_joe
-	}
-);
+//Loading manager - decides when to render the scene in onProgress under the loaders
+var loadingManager = new THREE.LoadingManager();
 
-loaderB.onProgress = function(item, loaded, total){
-  console.log(loaded);
-}
-//////////////////////////
-// var loader = new THREE.ColladaLoader();
-// loader.options.convertUpAxis = true;
-// //load the model
-// loader.load('models/neutral_idle.dae', function(collada) {
-//
-//   dae_joe = collada.scene;
-//
-//   dae_joe.traverse(function(child) {
-//
-//     if (child instanceof THREE.SkinnedMesh) {
-//
-//       var animation = new THREE.Animation(child, child.geometry.animation);
-//       animation.play();
-//     }
-//
-//   });
-//
-//   dae_joe.scale.x = dae_joe.scale.y = dae_joe.scale.z = model_scale;
-//   dae_joe.updateMatrix();
+/////////////////////////////////////
+//Joe model call the global loader///
+/////////////////////////////////////
+  var loader = new THREE.JSONLoader(loadingManager);
 
+  // load a resource
+  loader.load('models/joe.json',	function ( geo, mat) {
 
-//
-// }, function(xhr) {
-//   // preload()
-//   console.log(('progress ' + xhr.loaded / xhr.total * 100) + '% loaded')
-// });
+      //Set Material
+  		var material = new THREE.MultiMaterial( mat );
 
+      //Set the mesh up
+  		dae_joe = new THREE.Mesh( geo, mat );
 
-var loader = new THREE.ColladaLoader();
-loader.options.convertUpAxis = true;
-//load the model
-loader.load('models/Matt_Skel_Mesh.dae', function(collada) {
+      //Push the mesh to the scene
+      scene.add( dae_joe );
 
-  dae_matt = collada.scene;
+            //Animating
+           dae_joe.traverse(function(child) {
 
-  dae_matt.traverse(function(child) {
+             if (child instanceof THREE.SkinnedMesh) {
 
-    if (child instanceof THREE.SkinnedMesh) {
+            var animation = new THREE.Animation(child, child.geometry.animation);
 
-      var animation = new THREE.Animation(child, child.geometry.animation);
-      animation.play();
+            animation.play();
 
-    }
+          }
+
+        });
+  	});
+
+////////////////
+//Matt model ///
+////////////////
+
+  loader.load('models/joe.json', function( geo, mat){
+
+      //Set Material
+      var material = new THREE.MultiMaterial( mat );
+
+      //Set the mesh up
+      dae_joe = new THREE.Mesh( geo, mat );
+
+      //Push the mesh to the scene
+      scene.add( dae_joe );
+
+            //Animating
+           dae_joe.traverse(function(child) {
+
+             if (child instanceof THREE.SkinnedMesh) {
+
+            var animation = new THREE.Animation(child, child.geometry.animation);
+
+            animation.play();
+
+          }
+
+        });
 
   });
 
-  dae_matt.scale.x = dae_matt.scale.y = dae_matt.scale.z = model_scale*2.1;
-  dae_matt.updateMatrix();
+//Track global loading
+loadingManager.onProgress = function(item, loaded, total){
 
+  //Loading precentage pattern
+  console.log(loaded / total * 100 + '%');
 
+}
 
-}, function(xhr) {
-  // preload()
-  console.log(('progress ' + xhr.loaded / xhr.total * 100) + '% loaded')
-});
+//Signify loading done
+loadingManager.onLoad = function(){
 
+  animate();
 
+  //Start redrawing when the models are done loading
+  document.getElementById('loader').style.display='none';
 
-
-//////////////////////////////////////////////////////////////
+}
 
 function init() {
+
   // loading = false
+
   // clearInterval(timerId);
-  document.getElementById('loader').style.display='none'
 
   loadfont()
 
   container = document.createElement('div');
+
   document.body.appendChild(container);
 
   camera = new THREE.PerspectiveCamera(45, window.innerWidth / window.innerHeight, 1, 2000);
+
   camera.position.set(2, cameraYstart, cameraZstart);
 
   //controls:
