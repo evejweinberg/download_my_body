@@ -27,35 +27,54 @@ var typeRotatio = .01
 var spinning = false;
 var group;
 
+////////////////////////////
+var loaderB = new THREE.JSONLoader();
+
+// load a resource
+loaderB.load(
+	// resource URL
+	'models/joe.json',
+	// Function when resource is loaded
+	function ( geometry, materials ) {
+		var material = new THREE.MultiMaterial( materials );
+		dae_joe = new THREE.Mesh( geometry, material );
+    init();
+    scene.add( dae_joe );
+    animate();
+    // dae_joe
+	}
+);
+
+loaderB.onProgress = function(item, loaded, total){
+  console.log(loaded);
+}
+//////////////////////////
+// var loader = new THREE.ColladaLoader();
+// loader.options.convertUpAxis = true;
+// //load the model
+// loader.load('models/neutral_idle.dae', function(collada) {
+//
+//   dae_joe = collada.scene;
+//
+//   dae_joe.traverse(function(child) {
+//
+//     if (child instanceof THREE.SkinnedMesh) {
+//
+//       var animation = new THREE.Animation(child, child.geometry.animation);
+//       animation.play();
+//     }
+//
+//   });
+//
+//   dae_joe.scale.x = dae_joe.scale.y = dae_joe.scale.z = model_scale;
+//   dae_joe.updateMatrix();
 
 
-var loader = new THREE.ColladaLoader();
-loader.options.convertUpAxis = true;
-//load the model
-loader.load('models/neutral_idle.dae', function(collada) {
-
-  dae_joe = collada.scene;
-
-  dae_joe.traverse(function(child) {
-
-    if (child instanceof THREE.SkinnedMesh) {
-
-      var animation = new THREE.Animation(child, child.geometry.animation);
-      animation.play();
-    }
-
-  });
-
-  dae_joe.scale.x = dae_joe.scale.y = dae_joe.scale.z = model_scale;
-  dae_joe.updateMatrix();
-
-  init();
-  animate();
-
-}, function(xhr) {
-  // preload()
-  console.log(('progress ' + xhr.loaded / xhr.total * 100) + '% loaded')
-});
+//
+// }, function(xhr) {
+//   // preload()
+//   console.log(('progress ' + xhr.loaded / xhr.total * 100) + '% loaded')
+// });
 
 
 var loader = new THREE.ColladaLoader();
