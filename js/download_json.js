@@ -11,7 +11,7 @@ var container, stats;
 
 var camera, scene, renderer, objects, controls;
 var particleLight;
-var dae_joe, dae_matt;
+var joe, matt;
 var model_scale = 0.046;
 var cameraZstart = 24;
 var cameraYstart = 14;
@@ -43,49 +43,49 @@ var loadingManager = new THREE.LoadingManager();
 /////////////////////////////////////
 var loader = new THREE.ObjectLoader(loadingManager);
 
-  // load a resource
-  loader.load('models/joe.json',	function ( geo, mat) {
+  // // load a resource
+  // loader.load('models/joe.json',	function ( geo, mat) {
 
-      //Set Material
-  		var material = new THREE.MultiMaterial( mat );
-      // When and how do I pass the texture mat?
-      // '../models/textures/Joe_Skeletal_Mesh.jpg'
+  //     //Set Material
+  // 		//var material = new THREE.MultiMaterial( mat );
+  //     // When and how do I pass the texture mat?
+  //     // '../models/textures/Joe_Skeletal_Mesh.jpg'
 
-      // testing a basic material:
-      // var material = new THREE.MeshBasicMaterial({color: 0xffffff})
+  //     // testing a basic material:
+  //     // var material = new THREE.MeshBasicMaterial({color: 0xffffff})
 
-      //Set the mesh up
+  //     //Set the mesh up
 
-  		dae_joe = new THREE.Mesh( geo, material );
+  // 		joe = new THREE.Mesh( geo, material );
 
-      //Push the mesh to the scene
-      scene.add( dae_joe );
+  //     //Push the mesh to the scene
+  //     scene.add( joe );
 
 
-      dae_joe.traverse( function ( child ) {
+  //     joe.traverse( function ( child ) {
 
-            //add texture here??
+  //           //add texture here??
 
-          	// if ( child instanceof THREE.Mesh ) {
-						// 	child.material.map = texture;
-						// }
+  //         	// if ( child instanceof THREE.Mesh ) {
+		// 				// 	child.material.map = texture;
+		// 				// }
 
-					});
+		// 			});
 
-            //Animating
-           dae_joe.traverse(function(child) {
-            // console.log('joeChild',child)
+  //           //Animating
+  //          joe.traverse(function(child) {
+  //           // console.log('joeChild',child)
 
-             if (child instanceof THREE.SkinnedMesh) {
+  //            if (child instanceof THREE.SkinnedMesh) {
 
-            var animation = new THREE.Animation(child, child.geometry.animation);
+  //           var animation = new THREE.Animation(child, child.geometry.animation);
 
-            animation.play();
+  //           animation.play();
 
-          }
+  //         }
 
-        });
-  	});
+  //       });
+  // 	});
 
 // var loader = new THREE.ImageLoader( loadingManager );
 //   				loader.load( '../models/textures/Joe_Skeletal_Mesh.jpg', function ( image ) {
@@ -98,32 +98,49 @@ var loader = new THREE.ObjectLoader(loadingManager);
 //Matt model ///
 ////////////////
 
-loader.load('models/matt-model.json', function( geo, mat){
+loader.load('models/matt-model.json', function( object ){
 
-      //Set Material
-      var material = new THREE.MultiMaterial( mat );
-      //testing a basic material
-      // var material = new THREE.MeshBasicMaterial({color: 0xffffff})
+      //Assign global varialbe to matt object
+      matt = object;
 
-      //Set the mesh up
-      dae_matt = new THREE.Mesh( geo, material );
+      //Building a new material (even though you can just have one in the json file and use it)
+      var material = new THREE.MeshBasicMaterial({
+        color: 0xffffff,
+        map: THREE.ImageUtils.loadTexture('./models/textures/Matt_FullBody_WrapX_ReExport2.jpg')
+      })
+      
+      //Just so I can see, you can get rid of this
+      matt.scale.set(5,5,5);
+
+      //Since you decided to use the object loader you need to find the child element 
+      //material and re-assign it or rewrite the json - you should know both!
+      matt.traverse(function (child) {
+
+            if (child instanceof THREE.Mesh) {
+
+                child.material = material;
+
+            }
+            
+        });
+
 
       //Push the mesh to the scene
-      scene.add( dae_matt );
+      scene.add( matt );
 
-            //Animating
-           dae_matt.traverse(function(child) {
-             console.log(child)
+        //Animating
+        //    matt.traverse(function(child) {
+        //      console.log(child)
 
-             if (child instanceof THREE.SkinnedMesh) {
+        //      if (child instanceof THREE.SkinnedMesh) {
 
-            var animation = new THREE.Animation(child, child.geometry.animation);
+        //     var animation = new THREE.Animation(child, child.geometry.animation);
 
-            // animation.play();
+        //      animation.play();
 
-          }
+        //   }
 
-        });
+        // });
 
   });
 
@@ -138,9 +155,10 @@ loadingManager.onProgress = function(item, loaded, total){
 //Signify loading done
 loadingManager.onLoad = function(){
 
-  //Start redrawing when the models are done loading
+  //get rid of the loading screen
   document.getElementById('loader').style.display='none';
-
+  
+  //Start redrawing when the models are done loading
   animate();
 
 }
@@ -236,8 +254,8 @@ function onWindowResize() {
 function animate() {
 
   if (spinning){
-    dae_joe.rotation.y +=.05
-    dae_matt.rotation.y +=.05
+    joe.rotation.y +=.05
+    matt.rotation.y +=.05
   }
 
 
@@ -252,7 +270,6 @@ function animate() {
 var clock = new THREE.Clock();
 
 function render() {
-
 
   var timer = Date.now() * 0.0005;
 
@@ -274,7 +291,7 @@ function render() {
 
 
 
-  THREE.AnimationHandler.update(clock.getDelta());
+THREE.AnimationHandler.update(clock.getDelta());
 
   renderer.render(scene, camera);
 
@@ -352,20 +369,20 @@ function loadfont() {
 
   document.getElementById('matt').onclick = function(){
 
-    scene.add(dae_matt)
-    group.add(dae_matt)
-    scene.remove(dae_joe)
-    group.remove(dae_joe)
+    scene.add(matt)
+    group.add(matt)
+    scene.remove(joe)
+    group.remove(joe)
 
     document.getElementById("download").download="models/Matt_SkeletalMesh.zip";
   }
 
   document.getElementById('joe').onclick = function(){
 
-    scene.add(dae_joe)
-    group.add(dae_joe)
-    scene.remove(dae_matt)
-    group.remove(dae_matt)
+    scene.add(joe)
+    group.add(joe)
+    scene.remove(matt)
+    group.remove(matt)
 
     document.getElementById("download").download="models/Joe_SkeletalMesh.zip";
   }
