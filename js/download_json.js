@@ -25,6 +25,7 @@ var windowHalfY = window.innerHeight / 2;
 var centerOffset;
 var spinning = false;
 var group;
+var animation;
 
 var clock = new THREE.Clock();
 
@@ -103,10 +104,12 @@ loader.load('models/matt-model.json', function( object ){
       //Assign global varialbe to matt object
       matt = object;
 
+      var mesh;
+
       //Building a new material (even though you can just have one in the json file and use it)
       var material = new THREE.MeshBasicMaterial({
         color: 0xffffff,
-        map: THREE.ImageUtils.loadTexture('./models/textures/Matt_FullBody_WrapX_ReExport2.jpg')
+        map: THREE.ImageUtils.loadTexture('./models/textures/kotaku.1001.jpg')
       })
       
       //Just so I can see, you can get rid of this
@@ -120,8 +123,10 @@ loader.load('models/matt-model.json', function( object ){
 
                 child.material = material;
 
+                mesh = child;
+
             }
-            
+
         });
 
 
@@ -129,18 +134,19 @@ loader.load('models/matt-model.json', function( object ){
       scene.add( matt );
 
         //Animating
-        //    matt.traverse(function(child) {
-        //      console.log(child)
+           matt.traverse(function(child) {
 
-        //      if (child instanceof THREE.SkinnedMesh) {
+              if (child instanceof THREE.SkinnedMesh) {
 
-        //     var animation = new THREE.Animation(child, child.geometry.animation);
+                console.log(child.geometry);
 
-        //      animation.play();
+                // animation = new THREE.Animation(child.geometry, child.geometry.animations[0]);
 
-        //   }
+                // animation.play();
 
-        // });
+           }
+
+        });
 
   });
 
@@ -289,9 +295,9 @@ function render() {
 
   }
 
+  //THREE.AnimationHandler.update(clock.getDelta());
 
-
-THREE.AnimationHandler.update(clock.getDelta());
+  // animation.update(clock.getDelta());
 
   renderer.render(scene, camera);
 
