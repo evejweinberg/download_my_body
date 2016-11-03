@@ -23,7 +23,8 @@ var typeLeft = -8;
 var windowHalfX = window.innerWidth / 2;
 var windowHalfY = window.innerHeight / 2;
 var centerOffset;
-var spinning = false;
+var spinning = true;
+var spinSpeed = .01
 var group;
 
 var clock = new THREE.Clock();
@@ -43,55 +44,64 @@ var loadingManager = new THREE.LoadingManager();
 /////////////////////////////////////
 var loader = new THREE.ObjectLoader(loadingManager);
 
-  // // load a resource
-  // loader.load('models/joe.json',	function ( geo, mat) {
+////////////////
+//Joe model ///
+////////////////
 
-  //     //Set Material
-  // 		//var material = new THREE.MultiMaterial( mat );
-  //     // When and how do I pass the texture mat?
-  //     // '../models/textures/Joe_Skeletal_Mesh.jpg'
+loader.load('models/joeB.json', function( object ){
 
-  //     // testing a basic material:
-  //     // var material = new THREE.MeshBasicMaterial({color: 0xffffff})
+      //Assign global varialbe to matt object
+      joe = object;
 
-  //     //Set the mesh up
+      //Building a new material (even though you can just have one in the json file and use it)
+      var material = new THREE.MeshBasicMaterial({
+        color: 0xffffff,
+        map: THREE.ImageUtils.loadTexture('./models/textures/Joe_Skeletal_Mesh.jpg')
+      })
 
-  // 		joe = new THREE.Mesh( geo, material );
+      //Just so I can see, you can get rid of this
+      joe.scale.set(5,5,5);
 
-  //     //Push the mesh to the scene
-  //     scene.add( joe );
+      joe.position.z = 6
+      joe.position.y = 1
+      joe.rotation.y = 60
+      // joe.rotation.z = -1.57
+
+      //Since you decided to use the object loader you need to find the child element
+      //material and re-assign it or rewrite the json - you should know both!
+      joe.traverse(function (child) {
+
+            if (child instanceof THREE.Mesh) {
+
+                child.material = material;
+
+            }
+
+        });
 
 
-  //     joe.traverse( function ( child ) {
+      //Push the mesh to the scene
+      scene.add( joe );
 
-  //           //add texture here??
+        //Animating
+           joe.traverse(function(child) {
 
-  //         	// if ( child instanceof THREE.Mesh ) {
-		// 				// 	child.material.map = texture;
-		// 				// }
+              if (child instanceof THREE.SkinnedMesh) {
 
-		// 			});
+                //console.log(child.geometry.animations[0]);
 
-  //           //Animating
-  //          joe.traverse(function(child) {
-  //           // console.log('joeChild',child)
+                //var animation = new THREE.Animation(matt, child.geometry.animations[0]);
 
-  //            if (child instanceof THREE.SkinnedMesh) {
+                // animation.play();
 
-  //           var animation = new THREE.Animation(child, child.geometry.animation);
+           }
 
-  //           animation.play();
+        });
 
-  //         }
+  });
 
-  //       });
-  // 	});
 
-// var loader = new THREE.ImageLoader( loadingManager );
-//   				loader.load( '../models/textures/Joe_Skeletal_Mesh.jpg', function ( image ) {
-//   					texture.image = image;
-//   					texture.needsUpdate = true;
-//   				} );
+
 
 
 ////////////////
@@ -108,11 +118,14 @@ loader.load('models/matt-model.json', function( object ){
         color: 0xffffff,
         map: THREE.ImageUtils.loadTexture('./models/textures/kotaku.1001.jpg')
       })
-      
-      //Just so I can see, you can get rid of this
-      matt.scale.set(5,5,5);
 
-      //Since you decided to use the object loader you need to find the child element 
+      //Just so I can see, you can get rid of this
+      matt.scale.set(10,10,10);
+
+      matt.position.z = 6
+      matt.position.y = 1
+
+      //Since you decided to use the object loader you need to find the child element
       //material and re-assign it or rewrite the json - you should know both!
       matt.traverse(function (child) {
 
@@ -137,7 +150,7 @@ loader.load('models/matt-model.json', function( object ){
 
                 //var animation = new THREE.Animation(matt, child.geometry.animations[0]);
 
-                animation.play();
+                // animation.play();
 
            }
 
@@ -158,7 +171,13 @@ loadingManager.onLoad = function(){
 
   //get rid of the loading screen
   document.getElementById('loader').style.display='none';
-  
+
+  scene.add(group)
+  // scene.add(matt)
+  group.add(matt)
+  // group.add(joe)
+  scene.remove(joe)
+
   //Start redrawing when the models are done loading
   animate();
 
@@ -230,8 +249,8 @@ function init() {
 
    group.add( line )
 
-   scene.add(group)
-   group.rotation.x = -0.16
+
+  //  group.rotation.x = -0.16
    group.position.y = -2
 
   window.addEventListener('resize', onWindowResize, false);
@@ -254,10 +273,10 @@ function onWindowResize() {
 
 function animate() {
 
-  if (spinning){
-    joe.rotation.y +=.05
-    matt.rotation.y +=.05
-  }
+  // if (spinning){
+    joe.rotation.y += spinSpeed
+    matt.rotation.y += spinSpeed
+  // }
 
 
 
@@ -277,7 +296,6 @@ function render() {
 
   camera.lookAt(scene.position);
   if (type){
-    console.log('type is here')
     type.rotation.y += typeRotatio
     // console.log(type.rotation.y)
     if (type.rotation.y > .5){
@@ -356,14 +374,14 @@ function loadfont() {
 
 //allow spinning of models
 
-  document.getElementById("spin").onclick = function(){
-    if (spinning){
-      spinning = false
-      return;
-    } else {
-      spinning = true;
-    }
-  }
+  // document.getElementById("spin").onclick = function(){
+  //   if (spinning){
+  //     spinning = false
+  //     return;
+  //   } else {
+  //     spinning = true;
+  //   }
+  // }
 
 
 //click on buttons to load different models
@@ -375,7 +393,13 @@ function loadfont() {
     scene.remove(joe)
     group.remove(joe)
 
-    document.getElementById("download").download="models/Matt_SkeletalMesh.zip";
+    document.getElementById("spin").download="models/Matt_SkeletalMesh.zip";
+    document.getElementById("spin").innerHTML = 'DOWNLOAD MATT'
+    document.getElementById("spin").style.width = "270px"
+    document.getElementById("matt").style.backgroundColor = "red"
+    document.getElementById("matt").style.color = "white"
+    document.getElementById("joe").style.backgroundColor = "black"
+    document.getElementById("joe").style.color = "red"
   }
 
   document.getElementById('joe').onclick = function(){
@@ -385,5 +409,12 @@ function loadfont() {
     scene.remove(matt)
     group.remove(matt)
 
-    document.getElementById("download").download="models/Joe_SkeletalMesh.zip";
+    document.getElementById("spin").download="models/Joe_SkeletalMesh.zip";
+    document.getElementById("spin").innerHTML = 'DOWNLOAD JOE'
+    document.getElementById("spin").style.width = "270px"
+    document.getElementById("joe").style.backgroundColor = "red"
+    document.getElementById("joe").style.color = "white"
+    document.getElementById("matt").style.backgroundColor = "black"
+    document.getElementById("matt").style.color = "red"
+
   }
