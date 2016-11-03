@@ -25,7 +25,6 @@ var windowHalfY = window.innerHeight / 2;
 var centerOffset;
 var spinning = false;
 var group;
-var animation;
 
 var clock = new THREE.Clock();
 
@@ -104,8 +103,6 @@ loader.load('models/matt-model.json', function( object ){
       //Assign global varialbe to matt object
       matt = object;
 
-      var mesh;
-
       //Building a new material (even though you can just have one in the json file and use it)
       var material = new THREE.MeshBasicMaterial({
         color: 0xffffff,
@@ -123,8 +120,6 @@ loader.load('models/matt-model.json', function( object ){
 
                 child.material = material;
 
-                mesh = child;
-
             }
 
         });
@@ -138,11 +133,11 @@ loader.load('models/matt-model.json', function( object ){
 
               if (child instanceof THREE.SkinnedMesh) {
 
-                console.log(child.geometry);
+                //console.log(child.geometry.animations[0]);
 
-                // animation = new THREE.Animation(child.geometry, child.geometry.animations[0]);
+                //var animation = new THREE.Animation(matt, child.geometry.animations[0]);
 
-                // animation.play();
+                animation.play();
 
            }
 
@@ -295,9 +290,9 @@ function render() {
 
   }
 
-  //THREE.AnimationHandler.update(clock.getDelta());
 
-  // animation.update(clock.getDelta());
+
+THREE.AnimationHandler.update(clock.getDelta());
 
   renderer.render(scene, camera);
 
