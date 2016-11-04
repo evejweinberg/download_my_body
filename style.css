@@ -116,7 +116,7 @@ a {
 
 /* Smartphones (landscape) ----------- */
 
-@media all and (max-width: 311px) {
+@media all and (max-width: 340px) {
   #about-tab {
       display: none;
       font-size: 13px;
@@ -142,7 +142,7 @@ a {
     /* Styles */
 }
 
-@media all and (min-width: 311px) and (max-width: 768px) {
+@media all and (min-width: 340px) and (max-width: 768px) {
   #about-tab {
       display: none;
       font-size: 13px;
