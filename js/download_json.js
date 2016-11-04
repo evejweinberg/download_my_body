@@ -393,7 +393,7 @@ function loadfont() {
     scene.remove(joe)
     group.remove(joe)
 
-    document.getElementById("spin").download="models/Matt_SkeletalMesh.zip";
+    document.getElementById("spin").download="models/matt-model.json";
     document.getElementById("spin").innerHTML = 'DOWNLOAD MATT'
     document.getElementById("spin").style.width = "270px"
     document.getElementById("matt").style.backgroundColor = "red"
@@ -409,7 +409,7 @@ function loadfont() {
     scene.remove(matt)
     group.remove(matt)
 
-    document.getElementById("spin").download="models/Joe_SkeletalMesh.zip";
+    document.getElementById("spin").download="models/JoeB.json";
     document.getElementById("spin").innerHTML = 'DOWNLOAD JOE'
     document.getElementById("spin").style.width = "270px"
     document.getElementById("joe").style.backgroundColor = "red"

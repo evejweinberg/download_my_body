@@ -131,11 +131,11 @@ a {
 
 
     .name-tags {
-        margin-left: 10px;
-        margin-right: 10px;
+        margin-left: 4px;
+        margin-right: 4px;
         display: inline-block;
         top: 76%;
-        font-size: 20px;
+        font-size: 16px;
         width: 80px;
     }
     /* Styles */
