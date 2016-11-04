@@ -126,7 +126,7 @@ a {
   position: absolute;
   right: 24px;
   background-color: rgba(0,0,0,.5);
-  padding:10px;
+  padding:0px;
   }
 
 
@@ -152,13 +152,14 @@ a {
   position: absolute;
   right: 24px;
   background-color: rgba(0,0,0,.5);
-  padding:10px;
+  padding:2px;
   }
     .name-tags {
-        margin-left: 70px;
-        margin-right: 70px;
+      margin-left: 30px;
+  margin-right: 30px;
+  display: inline-block;
+  top: 75%;
         display: inline-block;
-        top: 66%;
         width: 100px;
     }
 }
