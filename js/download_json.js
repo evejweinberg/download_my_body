@@ -184,6 +184,13 @@ loadingManager.onLoad = function(){
 }
 
 function init() {
+  document.getElementById("spin").download="models/Matt_SkeletalMesh.zip";
+  document.getElementById("spin").innerHTML = 'DOWNLOAD MATT'
+  document.getElementById("spin").style.width = "270px"
+  document.getElementById("matt").style.backgroundColor = "red"
+  document.getElementById("matt").style.color = "white"
+  document.getElementById("joe").style.backgroundColor = "black"
+  document.getElementById("joe").style.color = "red"
 
 
   loadfont()
