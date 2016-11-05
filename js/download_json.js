@@ -416,7 +416,7 @@ function loadfont() {
     scene.remove(matt)
     group.remove(matt)
 
-    document.getElementById("spin").download="models/Joe_SkeletalMesh.zip";
+    document.getElementById("spin").download="models/Joe_SkeletalMesh";
     document.getElementById("spin").innerHTML = 'DOWNLOAD JOE'
     document.getElementById("spin").style.width = "270px"
     document.getElementById("joe").style.backgroundColor = "red"
